@@ -10,3 +10,15 @@
         <a id="catalog-product" href="#" class="clear-item" data-module="catalog" data-type="product">{#products#}</a>
     </li>
 </ul>
+<h3>{#news#}</h3>
+<ul>
+    <li>
+        <a id="news" href="#" class="clear-item" data-module="news">{#news#}</a>
+    </li>
+</ul>
+<h3>Pages</h3>
+<ul>
+    <li>
+        <a id="pages" href="#" class="clear-item" data-module="pages">pages</a>
+    </li>
+</ul>

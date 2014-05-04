@@ -147,6 +147,12 @@ class plugins_convdata_admin extends DBConvData{
                         $keys = array('idcatalog','titlecatalog','desccatalog');
                     }
                     break;
+                case 'news':
+                    $keys = array('idnews','n_title','n_content');
+                    break;
+                case 'pages':
+                    $keys = array('idpage','title_page','content_page');
+                    break;
             }
             $this->setItemData($data,$module,$type,$keys);
             $this->notify('update');
@@ -214,6 +220,14 @@ class DBConvData{
 		            FROM mc_catalog';
                 }
                 break;
+            case 'news':
+                $query = 'SELECT idnews, n_title, n_content
+		            FROM mc_news';
+                break;
+            case 'pages':
+                $query = 'SELECT idpage, title_page, content_page
+		            FROM mc_cms_pages';
+                break;
         }
         if($query){
             return magixglobal_model_db::layerDB()->select($query);
@@ -245,6 +259,16 @@ class DBConvData{
                       titlecatalog=:title,desccatalog=:content
                       WHERE idcatalog=:id';
                 }
+                break;
+            case 'news':
+                $query = 'UPDATE mc_news SET
+                      n_title=:title,n_content=:content
+                      WHERE idnews=:id';
+                break;
+            case 'pages':
+                $query = 'UPDATE mc_cms_pages SET
+                      title_page=:title,content_page=:content
+                      WHERE idpage=:id';
                 break;
         }
         if($query){
