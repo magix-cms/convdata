@@ -116,7 +116,15 @@ class plugins_convdata_admin extends DBConvData{
         }
         //loop and update data
         foreach($newData as $key){
-            $key['title'];
+            $this->update(
+                $module,
+                $type,
+                array(
+                    'id'=>$key['id'],
+                    'title'=>$key['title'],
+                    'content'=>$key['content']
+                )
+            );
         }
     }
 
@@ -196,10 +204,10 @@ class DBConvData{
                     $query = 'SELECT idcatalog, titlecatalog, desccatalog
 		            FROM mc_catalog';
                 }elseif($type === 'category'){
-                    $query = 'SELECT idclc,clibelle
+                    $query = 'SELECT idclc,clibelle,c_content
                     FROM mc_catalog_c';
                 }elseif($type === 'subcategory'){
-                    $query = 'SELECT idcls,slibelle
+                    $query = 'SELECT idcls,slibelle,s_content
                     FROM mc_catalog_s';
                 }else{
                     $query = 'SELECT idcatalog, titlecatalog, desccatalog
@@ -243,8 +251,8 @@ class DBConvData{
             magixglobal_model_db::layerDB()->update($query,
                 array(
                     ':id'       => $keys['id'],
-                    ':title'    => $keys['title'],
-                    ':content'  => $keys['content']
+                    ':title'    => utf8_decode($keys['title']),
+                    ':content'  => utf8_decode($keys['content'])
                 )
             );
         }
