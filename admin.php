@@ -153,6 +153,9 @@ class plugins_convdata_admin extends DBConvData{
                 case 'pages':
                     $keys = array('idpage','title_page','content_page');
                     break;
+                case 'rewrite':
+                    $keys = array('idrewrite','attribute','strrewrite');
+                    break;
             }
             $this->setItemData($data,$module,$type,$keys);
             $this->notify('update');
@@ -228,6 +231,10 @@ class DBConvData{
                 $query = 'SELECT idpage, title_page, content_page
 		            FROM mc_cms_pages';
                 break;
+            case 'rewrite':
+                $query = 'SELECT idrewrite, attribute, strrewrite
+		            FROM mc_metas_rewrite';
+                break;
         }
         if($query){
             return magixglobal_model_db::layerDB()->select($query);
@@ -269,6 +276,11 @@ class DBConvData{
                 $query = 'UPDATE mc_cms_pages SET
                       title_page=:title,content_page=:content
                       WHERE idpage=:id';
+                break;
+            case 'rewrite':
+                $query = 'UPDATE mc_metas_rewrite SET
+                      attribute=:title,strrewrite=:content
+                      WHERE idrewrite=:id';
                 break;
         }
         if($query){

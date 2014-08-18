@@ -22,3 +22,9 @@
         <a id="pages" href="#" class="clear-item" data-module="pages">pages</a>
     </li>
 </ul>
+<h3>Meta</h3>
+<ul>
+    <li>
+        <a id="rewrite" href="#" class="clear-item" data-module="rewrite">meta</a>
+    </li>
+</ul>
