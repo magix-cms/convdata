@@ -103,28 +103,55 @@ class plugins_convdata_admin extends DBConvData{
      * @param array $keys
      */
     public function setItemData(array $data,$module,$type,array $keys){
-        // define new array
-        $newKey = array(
-            $keys[0]  => 'id',
-            $keys[1]  => 'title',
-            $keys[2]  => 'content'
-        );
+        if(count($keys) > 3){
+            // define new array
+            $newKey = array(
+                $keys[0]  => 'id',
+                $keys[1]  => 'title',
+                $keys[2]  => 'content',
+                $keys[3]  => 'seo_title',
+                $keys[4]  => 'seo_desc'
+            );
+        }else{
+            // define new array
+            $newKey = array(
+                $keys[0]  => 'id',
+                $keys[1]  => 'title',
+                $keys[2]  => 'content'
+            );
+        }
+
         if(method_exists('backend_controller_plugins','arrayChangeKeys')){
             $newData = $this->template->arrayChangeKeys($data, $newKey);
         }else{
             $newData = $this->arrayChangeKeys($data, $newKey);
         }
+
         //loop and update data
         foreach($newData as $key){
-            $this->update(
-                $module,
-                $type,
-                array(
-                    'id'=>$key['id'],
-                    'title'=>$key['title'],
-                    'content'=>$key['content']
-                )
-            );
+            if(count($keys) > 3) {
+                $this->update(
+                    $module,
+                    $type,
+                    array(
+                        'id' => $key['id'],
+                        'title' => $key['title'],
+                        'content' => $key['content'],
+                        'seo_title' => $key['seo_title'],
+                        'seo_desc' => $key['seo_desc']
+                    )
+                );
+            }else{
+                $this->update(
+                    $module,
+                    $type,
+                    array(
+                        'id' => $key['id'],
+                        'title' => $key['title'],
+                        'content' => $key['content']
+                    )
+                );
+            }
         }
     }
 
@@ -151,12 +178,14 @@ class plugins_convdata_admin extends DBConvData{
                     $keys = array('idnews','n_title','n_content');
                     break;
                 case 'pages':
-                    $keys = array('idpage','title_page','content_page');
+                    $keys = array('idpage','title_page','content_page','seo_title_page','seo_desc_page');
                     break;
                 case 'rewrite':
                     $keys = array('idrewrite','attribute','strrewrite');
                     break;
             }
+            //count($keys);
+
             $this->setItemData($data,$module,$type,$keys);
             $this->notify('update');
         }
@@ -202,6 +231,13 @@ class plugins_convdata_admin extends DBConvData{
 }
 class DBConvData{
     /**
+     * @return array
+     */
+    protected function selectModule(){
+        $query = 'SELECT * FROM mc_plugins_convdata';
+        return magixglobal_model_db::layerDB()->select($query);
+    }
+    /**
      * @param string $module
      * @param null $type
      * @return array
@@ -228,7 +264,7 @@ class DBConvData{
 		            FROM mc_news';
                 break;
             case 'pages':
-                $query = 'SELECT idpage, title_page, content_page
+                $query = 'SELECT idpage, title_page, content_page, seo_title_page ,seo_desc_page
 		            FROM mc_cms_pages';
                 break;
             case 'rewrite':
@@ -274,7 +310,7 @@ class DBConvData{
                 break;
             case 'pages':
                 $query = 'UPDATE mc_cms_pages SET
-                      title_page=:title,content_page=:content
+                      title_page=:title,content_page=:content,seo_title_page=:seo_title,seo_desc_page=:seo_desc
                       WHERE idpage=:id';
                 break;
             case 'rewrite':
@@ -284,13 +320,25 @@ class DBConvData{
                 break;
         }
         if($query){
-            magixglobal_model_db::layerDB()->update($query,
-                array(
-                    ':id'       => $keys['id'],
-                    ':title'    => utf8_decode($keys['title']),
-                    ':content'  => utf8_decode($keys['content'])
-                )
-            );
+            if(count($keys) > 3) {
+                magixglobal_model_db::layerDB()->update($query,
+                    array(
+                        ':id'       => $keys['id'],
+                        ':title'    => utf8_decode($keys['title']),
+                        ':content'  => utf8_decode($keys['content']),
+                        ':seo_title'=> utf8_encode($keys['seo_title']),
+                        ':seo_desc' => utf8_decode($keys['seo_desc'])
+                    )
+                );
+            }else{
+                magixglobal_model_db::layerDB()->update($query,
+                    array(
+                        ':id'       => $keys['id'],
+                        ':title'    => utf8_decode($keys['title']),
+                        ':content'  => utf8_decode($keys['content'])
+                    )
+                );
+            }
         }
     }
 }
