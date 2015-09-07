@@ -184,7 +184,6 @@ class plugins_convdata_admin extends DBConvData{
                     $keys = array('idrewrite','attribute','strrewrite');
                     break;
             }
-            //count($keys);
 
             $this->setItemData($data,$module,$type,$keys);
             $this->notify('update');
